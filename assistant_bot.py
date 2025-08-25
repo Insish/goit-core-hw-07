@@ -11,6 +11,8 @@ def input_error(func):
             return "Contact not found."
         except IndexError:
             return "Enter the argument for the command"
+        except AttributeError:
+            return "Contact not found."
     return inner
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
@@ -166,8 +168,6 @@ def add_contact(args: list[str], book: AddressBook) -> str:
 def change_contact(args: list[str], book: AddressBook) -> str:
     name, old_phone, new_phone = args
     rec = book.find(name)
-    if rec is None:
-        raise KeyError
     rec.edit_phone(old_phone, new_phone)
     return "Phone updated."
 
@@ -176,8 +176,6 @@ def change_contact(args: list[str], book: AddressBook) -> str:
 def show_phone(args: list[str], book: AddressBook) -> str:
     name = args[0]
     rec = book.find(name)
-    if rec is None:
-        raise KeyError
     phones = ', '.join(p.value for p in rec.phones) if rec.phones else "No phones"
     return f"Contact for {name}: {phones}"
 
@@ -192,8 +190,6 @@ def show_all(book: AddressBook) -> str:
 def add_birthday(args, book: AddressBook):
     name, bday = args
     rec = book.find(name)
-    if rec is None:
-        raise KeyError
     rec.add_birthday(bday)
     return "Birthday added."
 
@@ -201,8 +197,6 @@ def add_birthday(args, book: AddressBook):
 def show_birthday(args, book: AddressBook):
     name = args[0]
     rec = book.find(name)
-    if rec is None:
-        raise KeyError
     if rec.birthday:
         return f"{name}: {rec.birthday.value}"
     else:
